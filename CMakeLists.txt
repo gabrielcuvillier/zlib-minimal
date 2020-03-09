@@ -93,6 +93,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 set(ZLIB_PUBLIC_HDRS
         ${CMAKE_CURRENT_BINARY_DIR}/zconf.h
         zlib.h
+        zutil.h
         )
 set(ZLIB_PRIVATE_HDRS
         crc32.h
@@ -103,7 +104,6 @@ set(ZLIB_PRIVATE_HDRS
         inflate.h
         inftrees.h
         trees.h
-        zutil.h
         )
 set(ZLIB_SRCS
         adler32.c
