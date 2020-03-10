@@ -191,6 +191,7 @@ if (BUILD_SHARED_LIBS)
     set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
     set_target_properties(zlib PROPERTIES SOVERSION 1)
 endif ()
+
 add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 
 if (NOT CYGWIN AND BUILD_SHARED_LIBS)
@@ -206,13 +207,14 @@ endif ()
 
 if (UNIX OR CYGWIN OR EMSCRIPTEN OR MINGW)
     # On unix-like platforms the library is almost always called libz
+    # GAB: also on CYGWIN/EMSCRIPTEN/MINGW
+    set_target_properties(zlibstatic PROPERTIES OUTPUT_NAME z)
     if (BUILD_SHARED_LIBS)
         set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
         if (NOT APPLE)
             set_target_properties(zlib PROPERTIES LINK_FLAGS "-Wl,--version-script,\"${CMAKE_CURRENT_SOURCE_DIR}/zlib.map\"")
         endif ()
     endif ()
-    set_target_properties(zlibstatic PROPERTIES OUTPUT_NAME z)
 elseif (BUILD_SHARED_LIBS AND WIN32)
     # Creates zlib1.dll when building shared library version
     set_target_properties(zlib PROPERTIES SUFFIX "1.dll")
