@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.4.4)
+cmake_minimum_required(VERSION 3.1)
+cmake_policy(VERSION 3.1)
 set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
 project(zlib C)
@@ -66,17 +67,17 @@ if (MSVC)
     include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 endif ()
 
-#if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
-#    # If we're doing an out of source build and the user has a zconf.h
-#    # in their source tree...
-#    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h)
-#        message(STATUS "Renaming")
-#        message(STATUS "    ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h")
-#        message(STATUS "to 'zconf.h.included' because this file is included with zlib")
-#        message(STATUS "but CMake generates it automatically in the build directory.")
-#        file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.included)
-#    endif ()
-#endif ()
+if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
+    # If we're doing an out of source build and the user has a zconf.h
+    # in their source tree...
+    if (EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h)
+        message(STATUS "Renaming")
+        message(STATUS "    ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h")
+        message(STATUS "to 'zconf.h.included' because this file is included with zlib")
+        message(STATUS "but CMake generates it automatically in the build directory.")
+        file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.included)
+    endif ()
+endif ()
 
 set(ZLIB_PC ${CMAKE_CURRENT_BINARY_DIR}/zlib.pc)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/zlib.pc.cmakein
@@ -203,7 +204,7 @@ if (NOT CYGWIN AND BUILD_SHARED_LIBS)
     set_target_properties(zlib PROPERTIES VERSION ${ZLIB_FULL_VERSION})
 endif ()
 
-if (UNIX)
+if (UNIX OR CYGWIN OR EMSCRIPTEN OR MINGW)
     # On unix-like platforms the library is almost always called libz
     if (BUILD_SHARED_LIBS)
         set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
