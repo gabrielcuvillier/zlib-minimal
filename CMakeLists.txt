@@ -93,6 +93,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 set(ZLIB_PUBLIC_HDRS
         ${CMAKE_CURRENT_BINARY_DIR}/zconf.h
         zlib.h
+        # GAB: add zutil.h to public headers, as it might be used by client libraries (eg. FreeImage for example)
         zutil.h
         )
 set(ZLIB_PRIVATE_HDRS
@@ -183,6 +184,7 @@ if (MINGW)
     set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif (MINGW)
 
+# GAB: Only build shared library if corresponding option is ON
 if (BUILD_SHARED_LIBS)
     add_library(zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
     set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
