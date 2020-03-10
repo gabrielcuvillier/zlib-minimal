@@ -190,7 +190,7 @@ if (BUILD_SHARED_LIBS)
 endif ()
 add_library(zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS})
 
-if (NOT CYGWIN AND NOT BUILD_SHARED_LIBS)
+if (NOT CYGWIN AND BUILD_SHARED_LIBS)
     # This property causes shared libraries on Linux to have the full version
     # encoded into their final filename.  We disable this on Cygwin because
     # it causes cygz-${ZLIB_FULL_VERSION}.dll to be created when cygz.dll
@@ -216,7 +216,7 @@ elseif (BUILD_SHARED_LIBS AND WIN32)
 endif ()
 
 if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
-    if (NOT EMSCRIPTEN)
+    if (BUILD_SHARED_LIBS)
         install(TARGETS zlib
                 RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
                 ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
@@ -241,7 +241,7 @@ endif ()
 # Example binaries
 #============================================================================
 
-if (NOT EMSCRIPTEN)
+if (BUILD_SHARED_LIBS)
     add_executable(example test/example.c)
     target_link_libraries(example zlib)
     add_test(example example)
