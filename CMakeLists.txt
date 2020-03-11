@@ -207,7 +207,7 @@ endif ()
 
 if (UNIX OR MINGW)
     # On unix-like platforms (LINUX, CYGWIN, EMSCRIPTEN, ...) the library is almost always called libz
-    # GAB: also on MINGW
+    # GAB: also add MINGW
     set_target_properties(zlibstatic PROPERTIES OUTPUT_NAME z)
     if (BUILD_SHARED_LIBS)
         set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
