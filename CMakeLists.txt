@@ -9,6 +9,9 @@ set(VERSION "1.2.11")
 option(ASM686 "Enable building i686 assembly implementation")
 option(AMD64 "Enable building amd64 assembly implementation")
 
+# Gab: force output library name to be "libz" instead of "zlib", even on Windows
+option(ZLIB_FORCE_LIBZ_OUTPUT_NAME "Force output name to be libz, even on Windows")
+
 set(INSTALL_BIN_DIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Installation directory for executables")
 set(INSTALL_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib" CACHE PATH "Installation directory for libraries")
 set(INSTALL_INC_DIR "${CMAKE_INSTALL_PREFIX}/include" CACHE PATH "Installation directory for headers")
@@ -205,9 +208,8 @@ if (NOT CYGWIN AND BUILD_SHARED_LIBS)
     set_target_properties(zlib PROPERTIES VERSION ${ZLIB_FULL_VERSION})
 endif ()
 
-if (UNIX OR MINGW)
-    # On unix-like platforms (LINUX, CYGWIN, EMSCRIPTEN, ...) the library is almost always called libz
-    # GAB: also add MINGW
+if (UNIX OR ZLIB_FORCE_LIBZ_OUTPUT_NAME)
+    # On unix-like platforms the library is almost always called libz
     set_target_properties(zlibstatic PROPERTIES OUTPUT_NAME z)
     if (BUILD_SHARED_LIBS)
         set_target_properties(zlib PROPERTIES OUTPUT_NAME z)
@@ -246,6 +248,7 @@ endif ()
 # Example binaries
 #============================================================================
 
+# GAB: only build executables and tests if shared libs is on
 if (BUILD_SHARED_LIBS)
     add_executable(example test/example.c)
     target_link_libraries(example zlib)
